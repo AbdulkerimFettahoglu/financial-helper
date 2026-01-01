@@ -1,35 +1,43 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { useState, useEffect } from 'react'
 import './App.css'
+import { db } from './db'
+import type { Person } from './models';
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [people, setPeople] = useState<Person[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+  const handleAddUser = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const form = e.currentTarget;
+    const formData = new FormData(form);
+    const name = formData.get('name') as string;
+
+    db.open()
+      .then(() => db.createPersonRecord(name))
+      .then(() => db.Persons.toArray())
+      .then((arr) => setPeople(arr))
+      .catch((err) => alert('DB hata:' + err))
+      .finally(() => {
+        form.reset();
+        setLoading(false);
+      });
+  }
+
+return (
+  <div style={{ padding: 20 }}>
+    <form onSubmit={handleAddUser}>
+      <input type="text" name="name" placeholder="Name" />
+      <button type="submit">Add User</button>
+    </form>
+    <h1>Basit Person Uygulaması (.then zinciri ile)</h1>
+    {loading ? <div>Yükleniyor...</div> : (
+      <ul>
+        {people.map(p => <li key={p.id}>{p.id} — {p.name}</li>)}
+      </ul>
+    )}
+  </div>
+);
 }
 
 export default App
