@@ -14,10 +14,6 @@ export class MySimpleDB extends Dexie {
         });
     }
 
-    async createPersonRecord(name: string) {
-        const id = await this.Persons.add({ name: name });
-        return { created: true, id, person: { id, name: name } as Person };
-    }
 }
 
 export const db = new MySimpleDB();
