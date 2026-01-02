@@ -7,7 +7,8 @@ export class MySimpleDB extends Dexie {
     constructor() {
         super('MySimpleDB');
         this.version(1).stores({
-            Persons: '++id, name'
+            Persons: '++id, name',
+            Products: '++id, name, shortName, amountUnit, priceTl, priceDollar',
         });
         this.open().catch((err) => {
             alert('DB open error\n' + err);

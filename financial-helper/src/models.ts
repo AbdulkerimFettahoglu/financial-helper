@@ -6,7 +6,7 @@ export interface Person {
 /** Ürün bilgisi */
 export interface Product {
   /** Benzersiz ürün kimliği (UUID veya string id) */
-  id: string;
+  id?: number;
   /** Ürün tam adı */
   name: string;
   /** Kısa isim veya kod */
@@ -14,9 +14,9 @@ export interface Product {
   /** Miktar birimi (ör. "kg", "adet") */
   amountUnit: string;
   /** Fiyat (TL cinsinden) */
-  priceTl: number;
+  priceTlMicro: number; // örn: 12.345678 TL -> 12_345_678
   /** Fiyat (USD/Dolar cinsinden) */
-  priceDollar: number;
+  priceDollarMicro: number; // örn: 1.990000 USD -> 1_990_000
 }
 
 /** İşlem kaydı (alım/satım vb.) */
