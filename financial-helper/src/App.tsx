@@ -58,12 +58,18 @@ function App() {
     const name = formData.get('productName') as string;
     const shortName = formData.get('productShortName') as string;
     const amountUnit = formData.get('productAmountUnit') as string;
-    const priceTlMicro = Number(formData.get('productPriceTl'));
-    const priceDollarMicro = Number(formData.get('productPriceDollar'));
-    if (!name || !shortName || !amountUnit || isNaN(priceTlMicro) || isNaN(priceDollarMicro)) {
+    const priceTl = Number(formData.get('productPriceTl'));
+    const priceTlMicroTemp = Number(formData.get('productPriceTlMicro'));
+    const priceDollar = Number(formData.get('productPriceDollar'));
+    const priceDollarMicroTemp = Number(formData.get('productPriceDollarMicro'));
+    if (!name || !shortName || !amountUnit || isNaN(priceTl) || isNaN(priceTlMicroTemp) || isNaN(priceDollar) || isNaN(priceDollarMicroTemp)) {
       alert('Ürün bilgileri eksik');
       return;
     }
+    const paddedTlMicro = priceTlMicroTemp.toString().padEnd(6, '0');
+    const paddedDollarMicro = priceDollarMicroTemp.toString().padEnd(6, '0');
+    const priceTlMicro = Number(priceTl + "" + paddedTlMicro);
+    const priceDollarMicro = Number(priceDollar + "" + paddedDollarMicro);
     const id = formData.get('productId') as string;
     if (id) {
       productService.updateProductPartial(Number(id), { name, shortName, amountUnit, priceTlMicro, priceDollarMicro })
@@ -98,8 +104,10 @@ function App() {
         <input name="productName" type="text" placeholder="Ürün adı" />
         <input name="productShortName" type="text" placeholder="Kısa isim" />
         <input name="productAmountUnit" type="text" placeholder="Miktar birimi" />
-        <input name="productPriceTl" type="number" step="0.01" placeholder="Fiyat (TL)" />
-        <input name="productPriceDollar" type="number" step="0.01" placeholder="Fiyat (USD)" />
+        <input name="productPriceTl" type="number" placeholder="Fiyat (TL)" />
+        <input name="productPriceTlMicro" type="text" placeholder="Fiyat (Kuruş)" maxLength={6}/>
+        <input name="productPriceDollar" type="number" placeholder="Fiyat (USD)" />
+        <input name="productPriceDollarMicro" type="text" placeholder="Fiyat (Cent)" maxLength={6}/>
         <button type="submit">Ürün Ekle</button>
       </form>
       <ul>
