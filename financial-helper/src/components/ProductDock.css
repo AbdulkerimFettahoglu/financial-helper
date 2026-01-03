@@ -1,0 +1,61 @@
+/* Konumlandırma: sabit, sayfanın sol-alt köşesinde */
+.product-dock {
+  position: fixed;
+  left: 16px;
+  bottom: 16px;
+  width: 220px;
+  z-index: 1050;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 14px;
+}
+
+/* Ürün kutusu (üstteki kutu) */
+.product-dock .product-box {
+  border-radius: 12px;
+  overflow: hidden;
+  transition: max-height 240ms ease, opacity 240ms ease, transform 240ms ease;
+  background: white;
+}
+
+/* Footer / Tab görünümü */
+.product-dock .product-footer {
+  background: #ffffff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 8px 10px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  cursor: pointer;
+}
+
+/* caret konumu */
+.product-dock .product-footer .caret {
+  font-size: 16px;
+}
+
+/* product item styling */
+.product-dock .product-item {
+  width: 100%;
+  text-align: center;
+  padding: 8px 10px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* collapsed / expanded davranışı */
+/* expanded: göster */
+.product-dock.expanded .product-box {
+  max-height: 260px; /* yeterli alan */
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* collapsed: gizle üst kutuyu, footer görünür */
+.product-dock.collapsed .product-box {
+  max-height: 0;
+  opacity: 0;
+  transform: translateY(6px);
+  pointer-events: none;
+}

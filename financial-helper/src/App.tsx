@@ -3,7 +3,7 @@ import './App.css'
 import { db } from './db'
 import type { Person } from './models';
 import { PersonService } from './personService';
-import ProductPanel from './components/ProductPanel';
+import ProductDock from './components/ProductDock';
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -61,7 +61,7 @@ function App() {
       <hr style={{ margin: '20px 0' }} />
 
       {/* Ürünlerle ilgili UI artık ayrı bileşende */}
-      <ProductPanel />
+      <ProductDock />
     </div>
   );
 }
