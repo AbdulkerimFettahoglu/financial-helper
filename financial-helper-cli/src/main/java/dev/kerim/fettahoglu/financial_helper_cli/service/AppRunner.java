@@ -1,15 +1,28 @@
 package dev.kerim.fettahoglu.financial_helper_cli.service;
 
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
+
+import java.util.Arrays;
+import java.util.Optional;
 
 @Component
 @ConditionalOnProperty(
         name = "cli.enabled",
         havingValue = "true"
 )
+@RequiredArgsConstructor
+@Slf4j
 class AppRunner implements CommandLineRunner {
+
+    @Value("${names}")
+    private String names;
+
+    private final PersonService personService;
 
     @Override
     public void run(String... args) {
@@ -18,30 +31,13 @@ class AppRunner implements CommandLineRunner {
             System.exit(0);
         }
 
+        if (Optional.ofNullable(names).isPresent()) {
+            Arrays.stream(names.split(",")).forEach(personService::savePerson);
+        }
+        log.info(personService.dumpPersonNames());
+
         String cmd = args[0];
-
         switch (cmd) {
-            case "greet":
-                String name = args.length > 1 ? args[1] : "Dünya";
-                System.out.println(name);
-                break;
-
-            case "sum":
-                if (args.length < 2) {
-                    System.out.println("sum için sayılar girin. Örnek: sum 1 2 3");
-                    break;
-                }
-                double total = 0;
-                try {
-                    for (int i = 1; i < args.length; i++) {
-                        total += Double.parseDouble(args[i]);
-                    }
-                    System.out.println("Toplam: " + total);
-                } catch (NumberFormatException e) {
-                    System.out.println("Sayı format hatası: " + e.getMessage());
-                }
-                break;
-
             case "help":
             default:
                 printHelp();
@@ -52,9 +48,7 @@ class AppRunner implements CommandLineRunner {
     }
 
     private void printHelp() {
-        System.out.println("Kullanım:");
-        System.out.println("  greet [isim]        - Selam verir (varsayılan: Dünya)");
-        System.out.println("  sum n1 n2 ...       - Verilen sayıların toplamını hesaplar");
-        System.out.println("  help                - Yardım gösterir");
+        log.info("Kullanım:");
+        log.info("  --names=name1,name2        - Person isimlerini ayarlar");
     }
 }

@@ -13,13 +13,20 @@ public class PersonService {
 
     private final PersonRepository personRepository;
 
-    public Person savePerson(Person person) {
-        if (Optional.ofNullable(person.getId()).isPresent()) {
-            Optional.of(personRepository.findById(person.getId())).get()
-                .orElseThrow(() -> {
-                    throw new RuntimeException("person not found.");
-                });
+    public Person savePerson(String name) {
+        Optional<Person> personOpt = personRepository.findByName(name);
+        if (personOpt.isPresent()) {
+            throw new RuntimeException("person already exist.");
         }
+        Person person = new Person();
+        person.setName(name);
         return personRepository.save(person);
+    }
+
+    public String dumpPersonNames() {
+        StringBuilder sb = new StringBuilder();
+        personRepository.findAll().forEach(person ->
+                sb.append(person.getName()).append(", "));
+        return sb.toString();
     }
 }
