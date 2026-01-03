@@ -24,7 +24,6 @@ public class TransactionManagementService {
 
     /**
      * TRANSACTION tablosuna yeni bir kayıt ekler.
-     *
      * İşleyiş:
      * - Gönderilen {@code CreateTransactionDto tx} içindeki verilerle yeni bir {@code Transaction} oluşturulur.
      * - İlgili {@code Person} ve {@code Product} varlıkları veritabanından alınır ve Transaction ile ilişkilendirilir.
@@ -34,7 +33,6 @@ public class TransactionManagementService {
      *   alanları işlem türüne (alım / satım) göre yeniden hesaplanır:
      *   - Alım (buy) işlemlerinde stok miktarı artırılır, toplam maliyet ve medyan maliyet güncellenir.
      *   - Satım (sell) işlemlerinde stok miktarı düşürülür ve maliyetler gereken şekilde düzeltilir.
-     *
      * Tutarlılık ve hata yönetimi:
      * - Metodun atomik olması beklenir (ör. çağıran servis {@code @Transactional} ile işaretlenmelidir) böylece Transaction ve Stock güncellemeleri birlikte ya başarılı olur ya da geri alınır.
      * - Eş zamanlı güncellemeler için uygun kilitleme veya optimistic locking mekanizmaları uygulanmalıdır.
@@ -92,7 +90,7 @@ public class TransactionManagementService {
         // 4. BUY / SELL mantığı
         if (tx.getType() == TransactionType.BUY) {
             double addedCostTl = quantity * tx.getPriceTl().doubleValue();
-            double addedCostDollar = quantity * tx.getPriceDollar().doubleValue();
+            //double addedCostDollar = quantity * tx.getPriceDollar().doubleValue();
 
             stock.setCurrentAmount(new BigDecimal(stock.getCurrentAmount().doubleValue() + quantity));
             stock.setTotalCostTl(new BigDecimal(stock.getTotalCostTl().doubleValue() + addedCostTl));

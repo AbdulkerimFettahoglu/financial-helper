@@ -1,6 +1,5 @@
 package dev.kerim.fettahoglu.financial_helper_cli.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;

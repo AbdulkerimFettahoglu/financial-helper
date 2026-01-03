@@ -15,7 +15,7 @@ public class PersonService {
 
     public Person savePerson(Person person) {
         if (Optional.ofNullable(person.getId()).isPresent()) {
-            Optional.ofNullable(personRepository.findById(person.getId())).get()
+            Optional.of(personRepository.findById(person.getId())).get()
                 .orElseThrow(() -> {
                     throw new RuntimeException("person not found.");
                 });
