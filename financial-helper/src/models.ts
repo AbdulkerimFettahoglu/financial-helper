@@ -22,11 +22,11 @@ export interface Product {
 /** İşlem kaydı (alım/satım vb.) */
 export interface Transaction {
   /** Benzersiz işlem kimliği */
-  id: string;
+  id: number;
   /** İşleme ait kişi/hesap kimliği */
-  personId: string;
+  personId: number;
   /** İşleme konu ürünün kimliği */
-  productId: string;
+  productId: number;
   /** İşlem miktarı */
   amount: number;
   /** İşlem miktarının birimi */
@@ -35,6 +35,8 @@ export interface Transaction {
   costTl: number;
   /** İşlem maliyeti (USD/Dolar) */
   costDollar: number;
+  /** İşlem türü */
+  type: 'buy' | 'sell';
   /** Oluşturulma tarihi (ISO string) */
   createDate: string;
 }
@@ -42,17 +44,21 @@ export interface Transaction {
 /** Stok bilgisi */
 export interface Stock {
   /** Benzersiz stok kaydı kimliği */
-  id: string;
+  id: number;
   /** Stok ile ilişkili kişi/hesap kimliği */
-  personId: string;
+  personId: number;
   /** Stoktaki ürünün kimliği */
-  productId: string;
+  productId: number;
   /** Mevcut miktar */
   currentAmount: number;
   /** Medyan maliyet (TL) */
   medianCostTl: number;
   /** Medyan maliyet (USD/Dolar) */
   medianCostDollar: number;
+  /** Medyan satış fiyatı (TL) */
+  medianSellTl: number;
+  /** Medyan satış fiyatı (USD/Dolar) */
+  medianSellDollar: number;
   /** Stok kaydının aktifliği */
   isActive: boolean;
 }
