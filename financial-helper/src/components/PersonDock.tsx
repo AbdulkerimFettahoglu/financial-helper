@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import './PersonDock.css';
 import type { Person } from '../models';
 import { PersonService } from '../personService';
