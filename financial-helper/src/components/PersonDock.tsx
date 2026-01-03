@@ -4,6 +4,8 @@ import type { Person } from '../models';
 import { PersonService } from '../personService';
 import { db } from '../db';
 import PersonModal from './PersonModal';
+import { useAppDispatch } from '../store';
+import { setSelectedPerson } from '../store/selectedPersonSlice';
 
 export default function PersonDock() {
     const [persons, setPersons] = useState<Person[]>([]);
@@ -13,6 +15,7 @@ export default function PersonDock() {
     const [editingPerson, setEditingPerson] = useState<Person | null>(null);
 
     const personService = new PersonService(db);
+    const dispatch = useAppDispatch();
 
     useEffect(() => {
         let mounted = true;
@@ -64,6 +67,15 @@ export default function PersonDock() {
             .catch(err => alert('Silme hatası: ' + err));
     };
 
+    const handleSelect = (p: Person) => {
+        dispatch(setSelectedPerson(p));
+    };
+
+    // PersonModal içinden seçildiğinde (onSelect) çalışacak handler
+    const handleSelectFromModal = (p: { id?: number; name: string }) => {
+        dispatch(setSelectedPerson({ id: p.id, name: p.name } as Person));
+    };
+
     return (
         <div className={`person-dock ${collapsed ? 'collapsed' : ''}`} aria-expanded={!collapsed}>
             <div className="person-header d-flex align-items-center justify-content-between px-3">
@@ -91,6 +103,7 @@ export default function PersonDock() {
                                 >
                                     {p.name}
                                 </button>
+                                <button className="btn btn-sm btn-outline-primary" onClick={() => handleSelect(p)} title="Seç">✓</button>
                                 <button className="btn btn-sm btn-outline-danger" onClick={() => handleDelete(p.id)} title="Sil">×</button>
                             </div>
                         ))
@@ -103,6 +116,7 @@ export default function PersonDock() {
                 initial={editingPerson}
                 onClose={closeModal}
                 onSubmit={handleSave}
+                onSelect={(p) => { handleSelectFromModal(p); closeModal(); }}
             />
         </div>
     );

@@ -5,10 +5,13 @@ import type { Person } from './models';
 import { PersonService } from './personService';
 import ProductDock from './components/ProductDock';
 import PersonDock from './components/PersonDock';
+import { useSelector } from 'react-redux';
+import type { RootState } from './store';
 
 function App() {
   const [loading, setLoading] = useState(true);
   const personService = new PersonService(db);
+  const selectedPerson = useSelector((s: RootState) => s.selectedPerson.selectedPerson);
   const [persons, setPersons] = useState<Person[]>([]);
   const addUserRef = useRef<HTMLFormElement | null>(null);
 
@@ -53,6 +56,12 @@ function App() {
       {/* Ana içerik: left sidebar genişliği kadar margin-left veriyoruz */}
       <div style={{ marginLeft: 260, padding: 20 }}>
         <h1>Basit Person Uygulaması</h1>
+
+        <div style={{ marginBottom: 12 }}>
+          <strong>Seçili Kişi: </strong>
+          {selectedPerson ? `${selectedPerson.id} — ${selectedPerson.name}` : 'Henüz seçili kişi yok'}
+        </div>
+
 
         <form ref={addUserRef} onSubmit={handleAddUser}>
           <input name="personId" type="text" placeholder="Id girin" />

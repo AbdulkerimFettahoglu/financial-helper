@@ -14,11 +14,13 @@ export default function PersonModal({
     initial,
     onClose,
     onSubmit,
+    onSelect
 }: {
     show: boolean;
     initial?: Person | null;
     onClose: () => void;
     onSubmit: (values: FormValues) => Promise<void>;
+    onSelect?: (p: { id?: number; name: string }) => void;
 }) {
     const [name, setName] = useState('');
     const [saving, setSaving] = useState(false);
@@ -49,6 +51,13 @@ export default function PersonModal({
         }
     };
 
+    const handleSelectClick = () => {
+        if (!name.trim()) return;
+        if (onSelect) {
+            onSelect({ id: initial?.id, name: name.trim() });
+        }
+    };
+
     return (
         <Modal show={show} onHide={onClose} centered>
             <Form onSubmit={handleSubmit}>
@@ -67,6 +76,9 @@ export default function PersonModal({
                     </Form.Group>
                 </Modal.Body>
                 <Modal.Footer>
+                    <Button variant="outline-primary" onClick={() => { handleSelectClick(); onClose(); }} disabled={!name.trim()}>
+                        Kişiyi Seç
+                    </Button>
                     <Button variant="secondary" onClick={onClose} disabled={saving}>Kapat</Button>
                     <Button variant="primary" type="submit" disabled={saving}>
                         {saving ? 'Kaydediliyor...' : 'Kaydet'}
