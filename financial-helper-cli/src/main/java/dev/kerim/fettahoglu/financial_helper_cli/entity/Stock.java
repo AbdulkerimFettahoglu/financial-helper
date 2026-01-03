@@ -29,16 +29,31 @@ public class Stock {
     private BigDecimal currentAmount;
 
     @Column(precision = 19, scale = 6)
+    private BigDecimal totalCostTl;
+
+    //@Column(precision = 19, scale = 6)
+    //private BigDecimal totalCostDollar;
+
+    @Column(precision = 19, scale = 6)
     private BigDecimal medianCostTl;
 
-    @Column(precision = 19, scale = 6)
-    private BigDecimal medianCostDollar;
+    //@Column(precision = 19, scale = 6)
+    //private BigDecimal medianCostDollar;
 
     @Column(precision = 19, scale = 6)
-    private BigDecimal medianSellTl;
+    private BigDecimal soldAmount;
 
     @Column(precision = 19, scale = 6)
-    private BigDecimal medianSellDollar;
+    private BigDecimal totalSoldTl;
+
+    //@Column(precision = 19, scale = 6)
+    //private BigDecimal totalSoldDollar;
+
+    @Column(precision = 19, scale = 6)
+    private BigDecimal medianSoldTl;
+
+    //@Column(precision = 19, scale = 6)
+    //private BigDecimal medianSellDollar;
 
     @Column
     private boolean isActive;

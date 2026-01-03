@@ -28,13 +28,17 @@ public class Transaction {
     @Column(nullable = false, precision = 19, scale = 6)
     private BigDecimal amount;
 
-    private String amountUnit;
+    @Column(precision = 19, scale = 6)
+    private BigDecimal priceTl;
 
     @Column(precision = 19, scale = 6)
-    private BigDecimal costTl;
+    private BigDecimal totalCostTl;
 
     @Column(precision = 19, scale = 6)
-    private BigDecimal costDollar;
+    private BigDecimal priceDollar;
+
+    @Column(precision = 19, scale = 6)
+    private BigDecimal totalCostDollar;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
