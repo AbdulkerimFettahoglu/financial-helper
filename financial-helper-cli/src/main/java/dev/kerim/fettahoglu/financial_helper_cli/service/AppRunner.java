@@ -8,16 +8,12 @@ import org.springframework.stereotype.Component;
 @Component
 @ConditionalOnProperty(
         name = "cli.enabled",
-        havingValue = "true",
-        matchIfMissing = false
+        havingValue = "true"
 )
 class AppRunner implements CommandLineRunner {
 
-    @Autowired
-    private PersonService personService;
-
     @Override
-    public void run(String... args) throws Exception {
+    public void run(String... args) {
         if (args.length == 0) {
             printHelp();
             System.exit(0);
