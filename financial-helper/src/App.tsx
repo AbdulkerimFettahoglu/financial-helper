@@ -1,18 +1,15 @@
 import { useState, useEffect, useRef } from 'react'
 import './App.css'
 import { db } from './db'
-import type { Person, Product } from './models';
+import type { Person } from './models';
 import { PersonService } from './personService';
-import { ProductService } from './procuctService';
+import ProductPanel from './components/ProductPanel';
 
 function App() {
   const [loading, setLoading] = useState(true);
   const personService = new PersonService(db);
   const [persons, setPersons] = useState<Person[]>([]);
-  const addUserRef = useRef(null);
-  const productService = new ProductService(db);
-  const [products, setProducts] = useState<Product[]>([]);
-  const addProductRef = useRef(null);
+  const addUserRef = useRef<HTMLFormElement | null>(null);
 
   useEffect(() => {
     setLoading(true);
@@ -20,9 +17,6 @@ function App() {
       .then((arr) => setPersons(arr))
       .catch((err) => alert('DB hata:' + err))
       .finally(() => setLoading(false));
-    productService.getAllProducts()
-      .then((arr) => setProducts(arr))
-      .catch((err) => alert('DB hata:' + err));
   }, []);
 
   const handleAddUser = (e: React.FormEvent) => {
@@ -50,41 +44,6 @@ function App() {
     }
   }
 
-  const handleAddProduct = (e: React.FormEvent) => {
-    e.preventDefault();
-    const form = addProductRef.current;
-    if (!form) return;
-    const formData = new FormData(form);
-    const name = formData.get('productName') as string;
-    const shortName = formData.get('productShortName') as string;
-    const amountUnit = formData.get('productAmountUnit') as string;
-    const priceTl = Number(formData.get('productPriceTl'));
-    const priceTlMicroTemp = Number(formData.get('productPriceTlMicro'));
-    const priceDollar = Number(formData.get('productPriceDollar'));
-    const priceDollarMicroTemp = Number(formData.get('productPriceDollarMicro'));
-    if (!name || !shortName || !amountUnit || isNaN(priceTl) || isNaN(priceTlMicroTemp) || isNaN(priceDollar) || isNaN(priceDollarMicroTemp)) {
-      alert('Ürün bilgileri eksik');
-      return;
-    }
-    const paddedTlMicro = priceTlMicroTemp.toString().padEnd(6, '0');
-    const paddedDollarMicro = priceDollarMicroTemp.toString().padEnd(6, '0');
-    const priceTlMicro = Number(priceTl + "" + paddedTlMicro);
-    const priceDollarMicro = Number(priceDollar + "" + paddedDollarMicro);
-    const id = formData.get('productId') as string;
-    if (id) {
-      productService.updateProductPartial(Number(id), { name, shortName, amountUnit, priceTlMicro, priceDollarMicro })
-        .then(() => productService.getAllProducts())
-        .then((newProducts) => setProducts(newProducts))
-        .catch((err) => alert('Ürün güncelleme hatası: ' + err));
-      return;
-    } else {
-      productService.createProductRecord({ name, shortName, amountUnit, priceTlMicro, priceDollarMicro })
-        .then(() => productService.getAllProducts())
-        .then((newProducts) => setProducts(newProducts))
-        .catch((err) => alert('Ürün ekleme hatası: ' + err));
-    }
-  }
-
   return (
     <div style={{ padding: 20 }}>
       <h1>Basit Person Uygulaması (.then zinciri ile)</h1>
@@ -98,22 +57,11 @@ function App() {
           {persons.map(p => <li key={p.id}>{p.id} — {p.name}</li>)}
         </ul>
       )}
-      <h2>Ürünler</h2>
-      <form ref={addProductRef} onSubmit={handleAddProduct}>
-        <input name="productId" type="text" placeholder="Id girin" />
-        <input name="productName" type="text" placeholder="Ürün adı" />
-        <input name="productShortName" type="text" placeholder="Kısa isim" />
-        <input name="productAmountUnit" type="text" placeholder="Miktar birimi" />
-        <input name="productPriceTl" type="number" placeholder="Fiyat (TL)" />
-        <input name="productPriceTlMicro" type="text" placeholder="Fiyat (Kuruş)" maxLength={6}/>
-        <input name="productPriceDollar" type="number" placeholder="Fiyat (USD)" />
-        <input name="productPriceDollarMicro" type="text" placeholder="Fiyat (Cent)" maxLength={6}/>
-        <button type="submit">Ürün Ekle</button>
-      </form>
-      <ul>
-        {products.map(p => <li key={p.id}>{p.id} — {p.name} — {p.shortName} — {p.amountUnit} — {p.priceTlMicro} TL / {p.priceDollarMicro} USD</li>)}
-      </ul>
 
+      <hr style={{ margin: '20px 0' }} />
+
+      {/* Ürünlerle ilgili UI artık ayrı bileşende */}
+      <ProductPanel />
     </div>
   );
 }
