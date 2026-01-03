@@ -9,6 +9,7 @@ export class MySimpleDB extends Dexie {
         this.version(1).stores({
             Persons: '++id, name',
             Products: '++id, name, shortName, amountUnit, priceTl, priceDollar',
+            Transactions: '++id, personId, productId, amount, amountUnit, costTl, costDollar, type, createDate'
         });
         this.open().catch((err) => {
             alert('DB open error\n' + err);
