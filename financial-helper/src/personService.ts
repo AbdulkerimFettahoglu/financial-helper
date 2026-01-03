@@ -47,4 +47,19 @@ export class PersonService {
         const saved = await this.Persons.get(id);
         return { replaced: true, id, person: saved as Person };
     }
+
+    // 4) Verilen id'yi IndexedDB'den silen metot
+    // returns { deleted: boolean, id?: number, person?: Person, message?: string }
+    async deletePersonById(id: number) {
+        if (id == null) throw new Error("id gerekli");
+
+        // Önce mevcut kaydı alıyoruz ki başarı durumunda silinen kaydı dönebilelim
+        const existing = await this.Persons.get(id);
+        if (!existing) {
+            return { deleted: false, message: "Kayıt bulunamadı" };
+        }
+
+        await this.Persons.delete(id);
+        return { deleted: true, id, person: existing };
+    }
 }

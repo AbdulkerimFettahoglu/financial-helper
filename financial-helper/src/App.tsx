@@ -4,6 +4,7 @@ import { db } from './db'
 import type { Person } from './models';
 import { PersonService } from './personService';
 import ProductDock from './components/ProductDock';
+import PersonDock from './components/PersonDock';
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -45,23 +46,31 @@ function App() {
   }
 
   return (
-    <div style={{ padding: 20 }}>
-      <h1>Basit Person Uygulaması (.then zinciri ile)</h1>
-      <form ref={addUserRef} onSubmit={handleAddUser}>
-        <input name="personId" type="text" placeholder="Id girin" />
-        <input name="personName" type="text" placeholder="İsim girin" />
-        <button type="submit">Ekle</button>
-      </form>
-      {loading ? <div>Yükleniyor...</div> : (
-        <ul>
-          {persons.map(p => <li key={p.id}>{p.id} — {p.name}</li>)}
-        </ul>
-      )}
+    <div>
+      {/* Sol tarafta sabit Person menü */}
+      <PersonDock />
 
-      <hr style={{ margin: '20px 0' }} />
+      {/* Ana içerik: left sidebar genişliği kadar margin-left veriyoruz */}
+      <div style={{ marginLeft: 260, padding: 20 }}>
+        <h1>Basit Person Uygulaması</h1>
 
-      {/* Ürünlerle ilgili UI artık ayrı bileşende */}
-      <ProductDock />
+        <form ref={addUserRef} onSubmit={handleAddUser}>
+          <input name="personId" type="text" placeholder="Id girin" />
+          <input name="personName" type="text" placeholder="İsim girin" />
+          <button type="submit">Ekle</button>
+        </form>
+
+        {loading ? <div>Yükleniyor...</div> : (
+          <ul>
+            {persons.map(p => <li key={p.id}>{p.id} — {p.name}</li>)}
+          </ul>
+        )}
+
+        <hr style={{ margin: '20px 0' }} />
+
+        {/* Ürün dock bileşeni - sayfanın sol alt köşesinde (önden eklediğimiz) */}
+        <ProductDock />
+      </div>
     </div>
   );
 }
