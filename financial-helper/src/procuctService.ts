@@ -197,4 +197,19 @@ export class ProductService {
     const saved = await this.Products.get(id);
     return { replaced: true, id, product: saved as Product };
   }
+
+  // 4) Verilen id'yi IndexedDB'den silen metot
+  // returns { deleted: boolean, id?: number, person?: Person, message?: string }
+  async deletePersonById(id: number) {
+    if (id == null) throw new Error("id gerekli");
+
+    // Önce mevcut kaydı alıyoruz ki başarı durumunda silinen kaydı dönebilelim
+    const existing = await this.Products.get(id);
+    if (!existing) {
+      return { deleted: false, message: "Kayıt bulunamadı" };
+    }
+    
+    await this.Products.delete(id);
+    return { deleted: true, id, product: existing };
+  }
 }
